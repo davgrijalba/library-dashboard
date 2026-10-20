@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Seattle Library Checkouts</title>
+  <meta name="description" content="How physical and digital borrowing at the Seattle Public Library changed from 2006 to 2025. All figures load from CSV files produced by reviewed Python scripts.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community@32.3.3/styles/ag-grid.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community@32.3.3/styles/ag-theme-quartz.css">
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <p class="eyebrow">Seattle Public Library · Checkouts by Title</p>
+      <h1>Physical vs. digital borrowing, 2006–2025</h1>
+      <p class="lede">How the library's checkouts moved from books and discs to e-books and audiobooks. Every number on this page is read at load time from CSV files written by reviewed Python scripts.</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <p id="load-status" class="status" role="status">Loading data…</p>
+
+    <section class="kpis" aria-label="Key numbers">
+      <div class="kpi"><span class="kpi-value" id="kpi-share">–</span><span class="kpi-label" id="kpi-share-label">Digital share of checkouts</span></div>
+      <div class="kpi"><span class="kpi-value" id="kpi-cross">–</span><span class="kpi-label">First full year digital passed physical</span></div>
+      <div class="kpi"><span class="kpi-value" id="kpi-peak">–</span><span class="kpi-label" id="kpi-peak-label">Physical checkouts at their peak</span></div>
+    </section>
+
+    <!-- 1. Annual share -->
+    <section class="card" aria-labelledby="share-title">
+      <div class="card-head">
+        <h2 id="share-title">Digital share of all checkouts</h2>
+        <span class="tag tag-complete">Complete data</span>
+      </div>
+      <p class="finding" id="share-finding"></p>
+      <div id="share-chart" class="chart" role="img" aria-label="Line chart of physical and digital share of checkouts by year"></div>
+      <p class="note">Source: <code>dashboard_data/annual_digital_physical_share.csv</code>. Complete years only; 2005 and 2026 are partial years and are left out.</p>
+    </section>
+
+    <!-- 2. Material types -->
+    <section class="card" aria-labelledby="mat-title">
+      <div class="card-head">
+        <h2 id="mat-title">What gets borrowed: material types</h2>
+        <span class="tag tag-sample">Sampled data</span>
+      </div>
+      <div class="controls">
+        <div class="segmented" role="group" aria-label="Usage class">
+          <button type="button" class="seg" data-mat-class="Digital" aria-pressed="true">Digital</button>
+          <button type="button" class="seg" data-mat-class="Physical" aria-pressed="false">Physical</button>
+        </div>
+        <div class="segmented" role="group" aria-label="Chart view">
+          <button type="button" class="seg" data-mat-view="stacked" aria-pressed="true">All years</button>
+          <button type="button" class="seg" data-mat-view="race" aria-pressed="false">Year-by-year race</button>
+        </div>
+      </div>
+      <p class="finding" id="mat-finding"></p>
+      <div id="mat-chart" class="chart" role="img" aria-label="Stacked bar chart of material type shares by year"></div>
+      <p class="note">Share of sampled checkouts by material type. Source: <code>dashboard_data/digital_material_type_shares_by_year.csv</code> and <code>physical_material_type_shares_by_year.csv</code>. The five largest types are shown; the rest are grouped as "Other types". Shares describe a balanced sample (12,500 title-month rows per year), not the full collection.</p>
+
+      <h3 class="sub">Most borrowed material type each year</h3>
+      <div id="mat-grid" class="ag-theme-quartz grid" aria-label="Table of the most borrowed material type each year"></div>
+    </section>
+
+    <!-- 3. Top titles -->
+    <section class="card" aria-labelledby="titles-title">
+      <div class="card-head">
+        <h2 id="titles-title">Most checked-out sampled titles</h2>
+        <span class="tag tag-sample">Sampled data</span>
+      </div>
+      <div class="controls">
+        <div class="segmented" role="group" aria-label="Usage class">
+          <button type="button" class="seg" data-title-class="Digital" aria-pressed="true">Digital</button>
+          <button type="button" class="seg" data-title-class="Physical" aria-pressed="false">Physical</button>
+        </div>
+        <label class="select">Year
+          <select id="title-year"></select>
+        </label>
+      </div>
+      <p class="finding" id="titles-finding"></p>
+      <div id="titles-chart" class="chart chart-tall" role="img" aria-label="Bar chart of the ten most checked-out sampled titles for the selected year"></div>
+      <p class="note">Source: <code>dashboard_data/digital_top_sampled_titles_by_year.csv</code> and <code>physical_top_sampled_titles_by_year.csv</code>. "Most checked out" means among sampled title-month rows, not the library's true top titles. Edition variants of a title are counted separately.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>Data: Seattle Open Data, <em>Checkouts by Title</em> (tmmm-ytt6). How each file was made, checked, and regenerated: <a href="dashboard_data/PROVENANCE.md">PROVENANCE.md</a>.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ag-grid-community@32.3.3/dist/ag-grid-community.min.noStyle.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
